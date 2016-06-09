@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import { bindActionCreators} from 'redux';
+import {fetchWeather} from '../actions/index' ; 
 
-export default class SearchBar extends Component {
+class SearchBar extends Component {
   constructor(props){
     super(props);
 
@@ -8,8 +11,9 @@ export default class SearchBar extends Component {
 
     //this is another method to creating the context w fat arrow
     this.onInputChange = this.onInputChange.bind(this); 
-  }
-
+    this.onFormSubmit = this.onFormSubmit.bind(this); 
+  } 
+  
   onInputChange(event){
     this.setState({term: event.target.value }); 
   }
@@ -17,6 +21,13 @@ export default class SearchBar extends Component {
   //prevent browser from submitting form
   onFormSubmit(event){
     event.preventDefault(); 
+
+    // go and fetch weather data
+    // we pass in city to the function
+    this.props.fetchWeather(this.state.term); 
+
+    //clear input after submit
+    this.setState({term: ''}); 
   }
 
   render (){
@@ -35,3 +46,18 @@ export default class SearchBar extends Component {
     );
   }
 }
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({fetchWeather}, dispatch);
+}
+                            
+// we're passing null because mapdispatch has to go in as second argument
+// we're saying that redux has to maintain state but we dont' care about it at this point
+export default connect(null, mapDispatchToProps)(SearchBar); 
+
+
+
+
+
+
+                            
